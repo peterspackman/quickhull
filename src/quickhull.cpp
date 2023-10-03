@@ -154,7 +154,7 @@ template <typename T> void QuickHull<T>::createConvexHalfEdgeMesh() {
       } else {
         const Plane<T> &P = pvf.m_P;
         pvf.m_visibilityCheckedOnIteration = iter;
-        const T d = P.m_N.dot(activePoint) + P.m_D;
+        const T d = P.normal.dot(activePoint) + P.m_D;
         if (d > 0) {
           pvf.m_isVisibleFaceOnCurrentIteration = 1;
           pvf.m_horizonEdgesOnCurrentIteration = 0;
@@ -276,7 +276,7 @@ template <typename T> void QuickHull<T>::createConvexHalfEdgeMesh() {
 
       auto &newFace = m_mesh.m_faces[newFaceIndex];
 
-      const Eigen::Matrix<T, 3, 1> planeNormal = mathutils::getTriangleNormal(
+      const Eigen::Matrix<T, 3, 1> planeNormal = mathutils::triangle_normal(
           m_vertexData.col(A), m_vertexData.col(B), activePoint);
       newFace.m_P = Plane<T>(planeNormal, activePoint);
       newFace.m_he = AB;
@@ -410,7 +410,7 @@ template <typename T> void QuickHull<T>::setupInitialTetrahedron() {
                    std::min((size_t)2, vertexCount - 1),
                    std::min((size_t)3, vertexCount - 1)};
 
-    const Eigen::Matrix<T, 3, 1> N = mathutils::getTriangleNormal(
+    const Eigen::Matrix<T, 3, 1> N = mathutils::triangle_normal(
         Eigen::Matrix<T, 3, 1>(m_vertexData.col(v[0])), m_vertexData.col(v[1]),
         m_vertexData.col(v[2]));
     const Plane<T> trianglePlane(N, m_vertexData.col(v[0]));
@@ -501,7 +501,7 @@ template <typename T> void QuickHull<T>::setupInitialTetrahedron() {
   // the point farthest away from the triangle plane.
   maxD = m_epsilon;
   maxI = 0;
-  const Eigen::Matrix<T, 3, 1> N = mathutils::getTriangleNormal(
+  const Eigen::Matrix<T, 3, 1> N = mathutils::triangle_normal(
       baseTriangleVertices[0], baseTriangleVertices[1],
       baseTriangleVertices[2]);
   Plane<T> trianglePlane(N, baseTriangleVertices[0]);
@@ -518,9 +518,9 @@ template <typename T> void QuickHull<T>::setupInitialTetrahedron() {
     // Well, let's add one extra point to the point cloud so that the convex
     // hull will have volume.
     m_planar = true;
-    const vec3 N1 = mathutils::getTriangleNormal(baseTriangleVertices[1],
-                                                 baseTriangleVertices[2],
-                                                 baseTriangleVertices[0]);
+    const vec3 N1 = mathutils::triangle_normal(baseTriangleVertices[1],
+                                               baseTriangleVertices[2],
+                                               baseTriangleVertices[0]);
     m_planarPointCloudTemp.clear();
     for (int i = 0; i < m_vertexData.cols(); i++) {
       m_planarPointCloudTemp.push_back(m_vertexData.col(i));
@@ -550,7 +550,7 @@ template <typename T> void QuickHull<T>::setupInitialTetrahedron() {
     const Eigen::Matrix<T, 3, 1> &va = m_vertexData.col(v[0]);
     const Eigen::Matrix<T, 3, 1> &vb = m_vertexData.col(v[1]);
     const Eigen::Matrix<T, 3, 1> &vc = m_vertexData.col(v[2]);
-    const Eigen::Matrix<T, 3, 1> N1 = mathutils::getTriangleNormal(va, vb, vc);
+    const Eigen::Matrix<T, 3, 1> N1 = mathutils::triangle_normal(va, vb, vc);
     const Plane<T> plane(N1, va);
     f.m_P = plane;
   }

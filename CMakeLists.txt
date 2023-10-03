@@ -1,15 +1,28 @@
-cmake_minimum_required(VERSION 3.11)
-project(QuickHullTests)
+cmake_minimum_required(VERSION 3.21)
+project(quickhull)
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CTest)
+    option(BUILD_TESTING "Build tests" ON)
+endif() 
 
 find_package(Eigen3 REQUIRED)
 
-set(SOURCE_FILES
-  ${CMAKE_SOURCE_DIR}/tests/QuickHullTests.cpp
-  ${CMAKE_SOURCE_DIR}/tests/main.cpp
-  ${CMAKE_SOURCE_DIR}/src/quickhull.cpp
-  )
+add_library(quickhull "${CMAKE_CURRENT_SOURCE_DIR}/src/quickhull.cpp")
+target_link_libraries(quickhull PUBLIC Eigen3::Eigen)
+target_include_directories(quickhull PUBLIC "${CMAKE_SOURCE_DIR}/include")
+target_compile_features(quickhull PUBLIC cxx_std_17)
 
-add_executable(run_tests ${SOURCE_FILES})
-target_compile_features(run_tests PUBLIC cxx_std_17)
-target_link_libraries(run_tests PUBLIC Eigen3::Eigen)
-target_include_directories(run_tests PUBLIC "${CMAKE_SOURCE_DIR}/include")
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+enable_testing()
+
+set(TEST_FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/QuickHullTests.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/catch_amalgamated.cpp"
+)
+
+add_executable(tests ${TEST_FILES})
+target_link_libraries(tests PUBLIC quickhull)
+add_test(NAME quickhull_tests COMMAND tests)
+
+endif()

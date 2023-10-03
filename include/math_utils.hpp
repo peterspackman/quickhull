@@ -18,12 +18,12 @@ inline float getSquaredDistanceBetweenPointAndRay(const Eigen::Vector3f &p,
 // length (divide by N.getNormalized() if needed to get the "real" distance).
 inline float getSignedDistanceToPlane(Eigen::Vector3f v,
                                       const Plane<float> &p) {
-  return p.m_N.dot(v) + p.m_D;
+  return p.normal.dot(v) + p.m_D;
 }
 
-inline Eigen::Vector3f getTriangleNormal(const Eigen::Vector3f &a,
-                                         const Eigen::Vector3f &b,
-                                         const Eigen::Vector3f &c) {
+inline Eigen::Vector3f triangle_normal(const Eigen::Vector3f &a,
+                                       const Eigen::Vector3f &b,
+                                       const Eigen::Vector3f &c) {
   // We want to get (a-c).crossProduct(b-c) without constructing temp vectors
   return (a - c).cross(b - c);
 }
@@ -39,12 +39,12 @@ inline double getSquaredDistanceBetweenPointAndRay(const Eigen::Vector3d &p,
 // length (divide by N.getNormalized() if needed to get the "real" distance).
 inline double getSignedDistanceToPlane(Eigen::Vector3d v,
                                        const Plane<double> &p) {
-  return p.m_N.dot(v) + p.m_D;
+  return p.normal.dot(v) + p.m_D;
 }
 
-inline Eigen::Vector3d getTriangleNormal(const Eigen::Vector3d &a,
-                                         const Eigen::Vector3d &b,
-                                         const Eigen::Vector3d &c) {
+inline Eigen::Vector3d triangle_normal(const Eigen::Vector3d &a,
+                                       const Eigen::Vector3d &b,
+                                       const Eigen::Vector3d &c) {
   // We want to get (a-c).crossProduct(b-c) without constructing temp vectors
   return (a - c).cross(b - c);
 }

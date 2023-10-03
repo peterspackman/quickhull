@@ -5,7 +5,7 @@ namespace quickhull {
 
 template <typename T> class Plane {
 public:
-  Eigen::Matrix<T, 3, 1> m_N;
+  Eigen::Matrix<T, 3, 1> normal;
 
   // Signed distance (if normal is of length 1) to the plane from origin
   T m_D;
@@ -14,7 +14,7 @@ public:
   T m_sqrNLength;
 
   bool isPointOnPositiveSide(const Eigen::Matrix<T, 3, 1> &Q) const {
-    T d = m_N.dot(Q) + m_D;
+    T d = normal.dot(Q) + m_D;
     if (d >= 0)
       return true;
     return false;
@@ -24,7 +24,7 @@ public:
 
   // Construct a plane using normal N and any point P on the plane
   Plane(const Eigen::Matrix<T, 3, 1> &N, const Eigen::Matrix<T, 3, 1> &P)
-      : m_N(N), m_D(-N.dot(P)), m_sqrNLength(m_N.squaredNorm()) {}
+      : normal(N), m_D(-N.dot(P)), m_sqrNLength(normal.squaredNorm()) {}
 };
 
 } // namespace quickhull
