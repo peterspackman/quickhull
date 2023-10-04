@@ -1,10 +1,10 @@
 #pragma once
-#include "convex_hull.hpp"
-#include "half_edge_mesh.hpp"
-#include "math_utils.hpp"
-#include "mesh.hpp"
-#include "plane.hpp"
-#include "pool.hpp"
+#include "convex_hull.h"
+#include "half_edge_mesh.h"
+#include "math_utils.h"
+#include "mesh.h"
+#include "plane.h"
+#include "pool.h"
 #include <array>
 #include <deque>
 #include <limits>

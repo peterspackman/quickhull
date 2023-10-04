@@ -1,6 +1,6 @@
 #pragma once
-#include "plane.hpp"
-#include "ray.hpp"
+#include "plane.h"
+#include "ray.h"
 #include <Eigen/Dense>
 
 namespace quickhull {

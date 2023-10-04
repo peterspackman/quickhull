@@ -1,5 +1,5 @@
 #pragma once
-#include "mesh.hpp"
+#include "mesh.h"
 #include <fstream>
 #include <memory>
 #include <unordered_map>
@@ -14,34 +14,9 @@ template <typename T> class ConvexHull {
 public:
   ConvexHull() {}
 
-  // Copy constructor
-  ConvexHull(const ConvexHull &o) {
-    m_indices = o.m_indices;
-    m_vertices = o.m_vertices;
-  }
-
-  ConvexHull &operator=(const ConvexHull &o) {
-    if (&o == this) {
-      return *this;
-    }
-    m_indices = o.m_indices;
-    m_vertices = o.m_vertices;
-    return *this;
-  }
-
-  ConvexHull(ConvexHull &&o) {
-    m_indices = std::move(o.m_indices);
-    m_vertices = std::move(o.m_vertices);
-  }
-
-  ConvexHull &operator=(ConvexHull &&o) {
-    if (&o == this) {
-      return *this;
-    }
-    m_indices = std::move(o.m_indices);
-    m_vertices = std::move(o.m_vertices);
-    return *this;
-  }
+  ConvexHull(const Eigen::Matrix<T, 3, Eigen::Dynamic> &vertices,
+             const std::vector<size_t> indices)
+      : m_vertices(vertices), m_indices(indices) {}
 
   // Construct vertex and index buffers from half edge mesh and pointcloud
   ConvexHull(const MeshBuilder<T> &mesh,
@@ -49,9 +24,6 @@ public:
 
     std::vector<bool> faceProcessed(mesh.m_faces.size(), false);
     std::vector<size_t> faceStack;
-    std::unordered_map<size_t, size_t>
-        vertexIndexMapping; // Map vertex indices from original point cloud to
-                            // the new mesh vertex indices
     for (size_t i = 0; i < mesh.m_faces.size(); i++) {
       if (!mesh.m_faces[i].isDisabled()) {
         faceStack.push_back(i);
@@ -93,6 +65,27 @@ public:
       }
     }
     m_vertices = pointCloud;
+  }
+
+  ConvexHull reduced() const {
+    std::unordered_map<size_t, size_t> vertex_mapping;
+    std::vector<size_t> new_indices;
+    new_indices.reserve(m_indices.size());
+    for (size_t idx : m_indices) {
+      auto loc = vertex_mapping.find(idx);
+      if (loc != vertex_mapping.end()) {
+        new_indices.push_back(loc->second);
+      } else {
+        size_t new_idx = vertex_mapping.size();
+        new_indices.push_back(new_idx);
+        vertex_mapping.insert({idx, new_idx});
+      }
+    }
+    std::vector<size_t> vertex_list(vertex_mapping.size());
+    for (const auto &[idx, new_idx] : vertex_mapping) {
+      vertex_list[new_idx] = idx;
+    }
+    return ConvexHull(m_vertices(Eigen::all, vertex_list), new_indices);
   }
 
   inline const auto &indices() const { return m_indices; }

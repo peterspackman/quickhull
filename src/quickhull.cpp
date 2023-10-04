@@ -1,6 +1,6 @@
-#include "quickhull.hpp"
-#include "math_utils.hpp"
-#include "mesh.hpp"
+#include "quickhull.h"
+#include "math_utils.h"
+#include "mesh.h"
 #include <algorithm>
 #include <cassert>
 #include <cmath>

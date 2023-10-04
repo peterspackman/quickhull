@@ -1,6 +1,6 @@
 #include "catch_amalgamated.hpp"
-#include "math_utils.hpp"
-#include "quickhull.hpp"
+#include "math_utils.h"
+#include "quickhull.h"
 #include <random>
 
 using namespace quickhull;
@@ -53,11 +53,15 @@ TEST_CASE("Basic hull", "[qh]") {
                                                i & 4 ? -1 : 1);
   }
   hull = qh.getConvexHull(pc, true);
-  REQUIRE(hull.indices().size() ==
-          3 * 2 *
-              6); // 6 cube faces, 2 triangles per face, 3 indices per triangle
+  // 6 cube faces, 2 triangles per face, 3 indices per triangle
+  constexpr size_t num_idxs = 3 * 2 * 6;
+  REQUIRE(hull.indices().size() == num_idxs);
+
   // true if we reduced the vertices
-  // REQUIRE(hull.vertices().cols() == 8);
+  auto reduced = hull.reduced();
+  REQUIRE(reduced.vertices().cols() == 8);
+  REQUIRE(reduced.indices().size() == num_idxs);
+
   auto hull2 = hull;
   REQUIRE(hull2.vertices().cols() == hull.vertices().cols());
   REQUIRE(hull2.vertices()(0, 0) == hull.vertices()(0, 0));
@@ -69,7 +73,6 @@ TEST_CASE("Basic hull", "[qh]") {
   hull = qh.getConvexHull(pc, true);
   REQUIRE(hull.indices().size() == 3 * 2 * 6);
   REQUIRE(hull.vertices().cols() == pc.cols());
-  // REQUIRE((hull.vertices().col(0)) == (pc[0]));
 }
 
 TEST_CASE("Sphere hull", "[qh]") {

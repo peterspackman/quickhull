@@ -6,7 +6,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     option(BUILD_TESTING "Build tests" ON)
 endif() 
 
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3 3.4 REQUIRED NO_MODULE)
 
 add_library(quickhull "${CMAKE_CURRENT_SOURCE_DIR}/src/quickhull.cpp")
 target_link_libraries(quickhull PUBLIC Eigen3::Eigen)
@@ -17,7 +17,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 enable_testing()
 
 set(TEST_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/tests/QuickHullTests.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_quickhull.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/tests/catch_amalgamated.cpp"
 )
 

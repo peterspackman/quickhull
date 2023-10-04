@@ -1,6 +1,6 @@
 #pragma once
-#include "plane.hpp"
-#include "pool.hpp"
+#include "plane.h"
+#include "pool.h"
 #include <Eigen/Dense>
 #include <array>
 #include <cassert>

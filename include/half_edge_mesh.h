@@ -1,5 +1,5 @@
 #pragma once
-#include "mesh.hpp"
+#include "mesh.h"
 
 namespace quickhull {
 
